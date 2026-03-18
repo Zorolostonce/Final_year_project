@@ -47,53 +47,78 @@ fetch("/students")
 
     data.forEach(s => {
 
-        // if student login → show only his row
-        if (
-            role === "student" &&
-            username &&
-            s.name.toLowerCase().trim() !==
-            username.toLowerCase().trim()
-        ) {
+        // teacher → show all
+        if (role === "teacher") {
+
+            addRow(s);
             return;
+
         }
 
-        studentTotal++;
+        // student → show only his name
+        if (role === "student") {
 
-        marked[s.id] = false;
+            if (!username) return;
 
-        div.innerHTML += `
+            if (
+                s.name.toLowerCase().trim()
+                ===
+                username.toLowerCase().trim()
+            ) {
 
-        <tr id="row${s.id}">
+                addRow(s);
 
-        <td>${s.name}</td>
+            }
 
-        <td>
-        <button id="p${s.id}"
-        onclick="mark(${s.id},'Present')">
-        P
-        </button>
-        </td>
-
-        <td>
-        <button id="a${s.id}"
-        onclick="mark(${s.id},'Absent')">
-        A
-        </button>
-        </td>
-
-        <td>
-        <span id="percent${s.id}"></span>
-        </td>
-
-        </tr>
-
-        `;
+        }
 
     });
 
     toggleButtons();
 
 });
+
+}
+
+
+// helper
+function addRow(s) {
+
+    studentTotal++;
+
+    marked[s.id] = false;
+
+    let div =
+    document.getElementById("studentsTable");
+
+    div.innerHTML += `
+
+    <tr id="row${s.id}">
+
+    <td>${s.name}</td>
+
+    <td>
+    <button id="p${s.id}"
+    onclick="mark(${s.id},'Present')">
+    P
+    </button>
+    </td>
+
+    <td>
+    <button id="a${s.id}"
+    onclick="mark(${s.id},'Absent')">
+    A
+    </button>
+    </td>
+
+    <td>
+    <span id="percent${s.id}">
+    </span>
+    </td>
+
+    </tr>
+
+    `;
 
 }
 
