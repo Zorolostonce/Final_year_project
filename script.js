@@ -29,7 +29,7 @@ localStorage.getItem("username") || "";
 
 function loadStudents() {
 
-fetch("/students")
+fetch(window.location.origin + "/students")
 .then(res => res.json())
 .then(data => {
 
