@@ -6,6 +6,7 @@ window.onload = function () {
     document.getElementById("date").value =
     today;
 
+    loadStudents();
     loadReport();
     loadStudentReport();
     loadHistory();
@@ -15,9 +16,6 @@ window.onload = function () {
 let marked = {};
 let studentTotal = 0;
 
-
-// ---------- LOAD STUDENTS ----------
-
 let role =
 localStorage.getItem("role");
 
@@ -25,29 +23,19 @@ let username =
 localStorage.getItem("username");
 
 
+// ---------- LOAD STUDENTS ----------
+
+function loadStudents() {
+
 fetch("/students")
 .then(res => res.json())
 .then(data => {
-
-    // Teacher → show all
-    // Student → show only his name
-
-    if (role === "student" && username) {
-
-        data = data.filter(
-            s =>
-            s.name.trim().toLowerCase() ===
-            username.trim().toLowerCase()
-        );
-
-    }
 
     studentTotal = data.length;
 
     let div =
     document.getElementById("studentsTable");
 
-    // clear old rows except header
     div.innerHTML = `
     <tr>
         <th>Name</th>
@@ -59,6 +47,15 @@ fetch("/students")
 
     data.forEach(s => {
 
+        if (
+            role === "student" &&
+            username &&
+            s.name.toLowerCase().trim() !==
+            username.toLowerCase().trim()
+        ) {
+            return;
+        }
+
         marked[s.id] = false;
 
         div.innerHTML += `
@@ -68,17 +65,15 @@ fetch("/students")
         <td>${s.name}</td>
 
         <td>
-        <button class="presentBtn"
-        id="p${s.id}"
-        onclick="mark(${s.id}, 'Present')">
+        <button id="p${s.id}"
+        onclick="mark(${s.id},'Present')">
         P
         </button>
         </td>
 
         <td>
-        <button class="absentBtn"
-        id="a${s.id}"
-        onclick="mark(${s.id}, 'Absent')">
+        <button id="a${s.id}"
+        onclick="mark(${s.id},'Absent')">
         A
         </button>
         </td>
@@ -89,7 +84,6 @@ fetch("/students")
         </td>
 
         </tr>
-
         `;
 
     });
@@ -97,51 +91,55 @@ fetch("/students")
     toggleButtons();
 
 });
+}
+
+
 // ---------- MARK ----------
 
 function mark(id,status){
-    let role =
-localStorage.getItem("role");
 
-if (role !== "teacher") {
+if (localStorage.getItem("role") !== "teacher") {
 
-    alert("Only teacher can mark");
-
-    return;
+alert("Only teacher can mark");
+return;
 
 }
-    if(marked[id]) return;
 
-    marked[id] = true;
+if(marked[id]) return;
 
-    document.getElementById("p"+id).disabled=true;
-    document.getElementById("a"+id).disabled=true;
+marked[id] = true;
 
-    let subject =
-    document.getElementById("subject").value;
+let p=document.getElementById("p"+id);
+let a=document.getElementById("a"+id);
 
-    let date =
-    document.getElementById("date").value;
+if(p) p.disabled=true;
+if(a) a.disabled=true;
 
-    fetch("/attendance",{
+let subject =
+document.getElementById("subject").value;
 
-        method:"POST",
+let date =
+document.getElementById("date").value;
 
-        headers:{
-            "Content-Type":"application/json"
-        },
+fetch("/attendance",{
 
-        body:JSON.stringify({
+method:"POST",
 
-            student_id:id,
-            status:status,
-            subject:subject,
-            date:date
+headers:{
+"Content-Type":"application/json"
+},
 
-        })
+body:JSON.stringify({
 
-    })
-    .then(()=>checkRoundComplete());
+student_id:id,
+status:status,
+subject:subject,
+date:date
+
+})
+
+})
+.then(()=>checkRoundComplete());
 
 }
 
@@ -150,45 +148,49 @@ if (role !== "teacher") {
 
 function checkRoundComplete(){
 
-    let count=0;
+let count=0;
 
-    for(let id in marked){
+for(let id in marked){
 
-        if(marked[id]) count++;
+if(marked[id]) count++;
 
-    }
+}
 
-    if(count===studentTotal){
+if(count===studentTotal){
 
-        for(let id in marked){
+for(let id in marked){
 
-            marked[id]=false;
+marked[id]=false;
 
-            document.getElementById("p"+id).disabled=false;
-            document.getElementById("a"+id).disabled=false;
+let p=document.getElementById("p"+id);
+let a=document.getElementById("a"+id);
 
-        }
+if(p) p.disabled=false;
+if(a) a.disabled=false;
 
-        reloadAll();
-    }
+}
+
+reloadAll();
+}
 
 }
 
 
-// ---------- URL BUILDER ----------
+// ---------- URL ----------
 
 function buildUrl(base,subject,date){
 
-    let url=base;
+let url=base;
 
-    if(subject!=="")
-        url+="?subject="+subject;
+if(subject!=="")
+url+="?subject="+subject;
 
-    if(date)
-        url+=(url.includes("?")?"&":"?")
-        +"date="+date;
+if(date)
+url+=(url.includes("?")?"&":"?")
++"date="+date;
 
-    return url;
+return url;
+
 }
 
 
@@ -196,53 +198,40 @@ function buildUrl(base,subject,date){
 
 function loadReport(){
 
-    let subject=
-    document.getElementById("subject").value;
+let subject=
+document.getElementById("subject").value;
 
-    let date=
-    document.getElementById("date").value;
+let date=
+document.getElementById("date").value;
 
-    let url=
-    buildUrl("/report",subject,date);
+let url=
+buildUrl("/report",subject,date);
 
-    fetch(url)
-    .then(r=>r.json())
-    .then(data=>{
+fetch(url)
+.then(r=>r.json())
+.then(data=>{
 
-        document.getElementById("totalClass").innerText=data.totalClasses;
-        document.getElementById("presentCount").innerText=data.present;
-        document.getElementById("absentCount").innerText=data.absent;
+document.getElementById("totalClass").innerText=data.totalClasses;
+document.getElementById("presentCount").innerText=data.present;
+document.getElementById("absentCount").innerText=data.absent;
 
-        let percent=0;
+let percent=0;
 
-        if(data.totalClasses>0){
+if(data.totalClasses>0){
 
-            if(subject===""){
+percent=
+data.present/
+(data.present+data.absent||1)
+*100;
 
-                percent=
-                data.present/
-                (data.present+data.absent||1)
-                *100;
+}
 
-            }
+if(percent>100) percent=100;
 
-            else{
+document.getElementById("percent").innerText=
+percent.toFixed(0);
 
-                percent=
-                data.present/
-                (data.totalClasses*studentTotal)
-                *100;
-
-            }
-
-        }
-
-        if(percent>100) percent=100;
-
-        document.getElementById("percent").innerText=
-        percent.toFixed(0);
-
-    });
+});
 
 }
 
@@ -251,100 +240,57 @@ function loadReport(){
 
 function loadStudentReport(){
 
-    let subject=
-    document.getElementById("subject").value;
+let subject=
+document.getElementById("subject").value;
 
-    let date=
-    document.getElementById("date").value;
+let date=
+document.getElementById("date").value;
 
-    let url1=
-    buildUrl("/report",subject,date);
+let url1=
+buildUrl("/report",subject,date);
 
-    let url2=
-    buildUrl("/studentReport",subject,date);
+let url2=
+buildUrl("/studentReport",subject,date);
 
-    fetch(url1)
-    .then(r=>r.json())
-    .then(rep=>{
+fetch(url1)
+.then(r=>r.json())
+.then(rep=>{
 
-        fetch(url2)
-        .then(r=>r.json())
-        .then(data=>{
+fetch(url2)
+.then(r=>r.json())
+.then(data=>{
 
-            let totalClasses=
-            rep.totalClasses;
+let totalClasses=
+rep.totalClasses;
 
-            for(let id in data){
+for(let id in data){
 
-                let present=data[id];
+let present=data[id];
 
-                let percent=0;
+let percent=0;
 
-                if(totalClasses>0){
+if(totalClasses>0){
 
-                    if(subject===""){
+percent=
+present/
+totalClasses
+*100;
 
-                        percent=
-                        present/
-                        totalClasses
-                        *100/studentTotal;
+}
 
-                    }
+let el=
+document.getElementById("percent"+id);
 
-                    else{
+if(!el) continue;
 
-                        percent=
-                        present/
-                        totalClasses
-                        *100;
+el.innerText=
+percent.toFixed(0)+"%";
 
-                    }
+}
 
-                }
+});
 
-                if(percent>100) percent=100;
-
-                let el=
-                document.getElementById("percent"+id);
-
-                if(!el) continue;
-
-                let color="green";
-                let warn="";
-
-                if(percent<50){
-
-                    color="red";
-                    warn="LOW";
-
-                }
-                else if(percent<75){
-
-                    color="orange";
-                    warn="WARN";
-
-                }
-
-                el.innerHTML=
-                `
-                <div class="bar">
-                <div class="fill"
-                style="width:${percent}%;
-                background:${color}">
-                </div>
-                </div>
-
-                ${percent.toFixed(0)}%
-
-                <span class="warn">
-                ${warn}
-                </span>
-                `;
-            }
-
-        });
-
-    });
+});
 
 }
 
@@ -353,68 +299,65 @@ function loadStudentReport(){
 
 function loadHistory(){
 
-    let subject=
-    document.getElementById("subject").value;
+let subject=
+document.getElementById("subject").value;
 
-    let date=
-    document.getElementById("date").value;
+let date=
+document.getElementById("date").value;
 
-    let url=
-    buildUrl("/history",subject,date);
+let url=
+buildUrl("/history",subject,date);
 
-    fetch(url)
-    .then(r=>r.json())
-    .then(data=>{
+fetch(url)
+.then(r=>r.json())
+.then(data=>{
 
-        let table=
-        document.getElementById("historyTable");
+let table=
+document.getElementById("historyTable");
 
-        table.innerHTML=
-        `
-        <tr>
-        <th>Date</th>
-        <th>Subject</th>
-        <th>Class</th>
-        <th>Name</th>
-        <th>Status</th>
-        <th>Edit</th>
-        </tr>
-        `;
+table.innerHTML=`
+<tr>
+<th>Date</th>
+<th>Subject</th>
+<th>Class</th>
+<th>Name</th>
+<th>Status</th>
+<th>Edit</th>
+</tr>
+`;
 
-        data.forEach(a=>{
+data.forEach(a=>{
 
-            table.innerHTML+=
-            `
-            <tr>
+table.innerHTML+=`
+<tr>
 
-            <td>${a.date}</td>
-            <td>${a.subject}</td>
-            <td>${a.classId}</td>
-            <td>${a.name}</td>
-            <td>${a.status}</td>
+<td>${a.date}</td>
+<td>${a.subject}</td>
+<td>${a.classId}</td>
+<td>${a.name}</td>
+<td>${a.status}</td>
 
-            <td>
+<td>
 
-            <button
-            onclick="editAttendance(
-            '${a.date}',
-            '${a.subject}',
-            ${a.classId},
-            ${a.student_id},
-            '${a.status}'
-            )">
+<button
+onclick="editAttendance(
+'${a.date}',
+'${a.subject}',
+${a.classId},
+${a.student_id},
+'${a.status}'
+)">
+Edit
+</button>
 
-            Edit
+</td>
 
-            </button>
+</tr>
+`;
 
-            </td>
+});
 
-            </tr>
-            `;
-        });
-
-    });
+});
 
 }
 
@@ -422,32 +365,48 @@ function loadHistory(){
 // ---------- EDIT ----------
 
 function editAttendance(
-date,subject,classId,student,oldStatus){
+date,
+subject,
+classId,
+student,
+oldStatus
+){
 
-    let newStatus=
-    oldStatus==="Present"
-    ?"Absent":"Present";
+if (
+localStorage.getItem("role")
+!== "teacher"
+) {
 
-    fetch("/editAttendance",{
+alert("Only teacher can edit");
+return;
 
-        method:"POST",
+}
 
-        headers:{
-            "Content-Type":"application/json"
-        },
+let newStatus =
+oldStatus === "Present"
+? "Absent"
+: "Present";
 
-        body:JSON.stringify({
+fetch("/editAttendance",{
 
-            date:date,
-            subject:subject,
-            classId:classId,
-            student:student,
-            status:newStatus
+method:"POST",
 
-        })
+headers:{
+"Content-Type":"application/json"
+},
 
-    })
-    .then(()=>reloadAll());
+body:JSON.stringify({
+
+date:date,
+subject:subject,
+classId:classId,
+student:student,
+status:newStatus
+
+})
+
+})
+.then(()=>reloadAll());
 
 }
 
@@ -456,77 +415,59 @@ date,subject,classId,student,oldStatus){
 
 function loadChart(){
 
-    let subject=
-    document.getElementById("subject").value;
+let subject=
+document.getElementById("subject").value;
 
-    let date=
-    document.getElementById("date").value;
+let date=
+document.getElementById("date").value;
 
-    let url=
-    buildUrl("/summaryChart",subject,date);
+let url=
+buildUrl("/summaryChart",subject,date);
 
-    fetch(url)
-    .then(r=>r.json())
-    .then(data=>{
+fetch(url)
+.then(r=>r.json())
+.then(data=>{
 
-        let labels=[];
-        let values=[];
+let labels=[];
+let values=[];
 
-        for(let s in data){
+for(let s in data){
 
-            let p=data[s].present||0;
-            let t=data[s].total||0;
+let p=data[s].present||0;
+let t=data[s].total||0;
 
-            let percent=0;
+let percent=0;
 
-            if(t>0)
-                percent=(p/t)*100;
+if(t>0)
+percent=(p/t)*100;
 
-            if(percent>100)
-                percent=100;
+labels.push(s);
+values.push(percent);
 
-            labels.push(s);
-            values.push(percent);
+}
 
-        }
+let ctx=
+document.getElementById("summaryChart");
 
-        let ctx=
-        document.getElementById("summaryChart");
+if(window.chart)
+window.chart.destroy();
 
-        if(window.chart)
-            window.chart.destroy();
+window.chart=
+new Chart(ctx,{
 
-        window.chart=
-        new Chart(ctx,{
+type:"bar",
 
-            type:"bar",
+data:{
+labels:labels,
+datasets:[{
+label:"Attendance %",
+data:values
+}]
+}
 
-            data:{
-                labels:labels,
-                datasets:[{
-                    label:"Attendance %",
-                    data:values,
-                    backgroundColor:[
-                        "red",
-                        "orange",
-                        "green",
-                        "blue"
-                    ]
-                }]
-            },
+});
 
-            options:{
-                scales:{
-                    y:{
-                        beginAtZero:true,
-                        max:100
-                    }
-                }
-            }
-
-        });
-
-    });
+});
 
 }
 
@@ -535,79 +476,74 @@ function loadChart(){
 
 function toggleButtons(){
 
-    let subject=
-    document.getElementById("subject").value;
+let subject=
+document.getElementById("subject").value;
 
-    let disable=
-    subject==="";
+let disable=
+subject==="";
 
-    for(let id in marked){
+for(let id in marked){
 
-        let p=
-        document.getElementById("p"+id);
+let p=document.getElementById("p"+id);
+let a=document.getElementById("a"+id);
 
-        let a=
-        document.getElementById("a"+id);
+if(!p||!a) continue;
 
-        if(!p||!a) continue;
-
-        p.disabled=disable;
-        a.disabled=disable;
-
-    }
+p.disabled=disable;
+a.disabled=disable;
 
 }
 
+}
 
 
 // ---------- RELOAD ----------
 
 function reloadAll(){
 
-    loadReport();
-    loadStudentReport();
-    loadHistory();
-    loadChart();
-    toggleButtons();
+loadStudents();
+loadReport();
+loadStudentReport();
+loadHistory();
+loadChart();
+toggleButtons();
 
 }
+
+
+// ---------- ADD STUDENT ----------
+
 function addStudent() {
 
-    let name =
-    document.getElementById(
-        "newStudentName"
-    ).value;
+let name =
+document.getElementById(
+"newStudentName"
+).value;
 
-    console.log("Clicked", name);
+if (!name) {
+alert("Enter name");
+return;
+}
 
-    if (!name) {
-        alert("Enter name");
-        return;
-    }
+fetch("/addStudent", {
 
-    fetch("/addStudent", {
+method: "POST",
 
-        method: "POST",
+headers: {
+"Content-Type":
+"application/json"
+},
 
-        headers: {
-            "Content-Type":
-            "application/json"
-        },
+body: JSON.stringify({
+name: name
+})
 
-        body: JSON.stringify({
-            name: name
-        })
+})
+.then(() => {
 
-    })
-    .then(r => r.text())
-    .then(t => {
+alert("Student added");
+reloadAll();
 
-        console.log("Server:", t);
-
-        alert("Student added");
-
-        location.reload();
-
-    });
+});
 
 }
