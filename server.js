@@ -396,6 +396,37 @@ app.post("/deleteAttendance", (req, res) => {
 
 });
 
+// -------- LOGIN --------
+
+app.post("/login", (req, res) => {
+
+    let users = JSON.parse(
+        fs.readFileSync("users.json")
+    );
+
+    let { username, password } = req.body;
+
+    let user = users.find(
+        u =>
+            u.username === username &&
+            u.password === password
+    );
+
+    if (!user) {
+
+        return res.json({
+            success: false
+        });
+
+    }
+
+    res.json({
+        success: true,
+        role: user.role
+    });
+
+});
+
 // ---------------- START SERVER ----------------
 
 const PORT = process.env.PORT || 3000;
