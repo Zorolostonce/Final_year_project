@@ -17,9 +17,7 @@
 let role =
 localStorage.getItem("role");
 
-if (role !== "teacher") {
-
-    alert("Teacher only");
+if (!role) {
 
     window.location =
     "login.html";
