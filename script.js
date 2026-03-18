@@ -18,14 +18,34 @@ let studentTotal = 0;
 
 // ---------- LOAD STUDENTS ----------
 
+let role =
+localStorage.getItem("role");
+
+let username =
+localStorage.getItem("username");
+
 fetch("/students")
 .then(res => res.json())
 .then(data => {
 
+    // if student → show only himself
+
+    if (role === "student") {
+
+        data = data.filter(
+            s =>
+            s.name.toLowerCase()
+            === username.toLowerCase()
+        );
+
+    }
+
     studentTotal = data.length;
 
     let div =
-    document.getElementById("studentsTable");
+    document.getElementById(
+        "studentsTable"
+    );
 
     data.forEach(s => {
 
@@ -38,7 +58,7 @@ fetch("/students")
         <td>${s.name}</td>
 
         <td>
-        <button class="presentBtn"
+        <button
         id="p${s.id}"
         onclick="mark(${s.id},'Present')">
         P
@@ -46,7 +66,7 @@ fetch("/students")
         </td>
 
         <td>
-        <button class="absentBtn"
+        <button
         id="a${s.id}"
         onclick="mark(${s.id},'Absent')">
         A
@@ -54,17 +74,16 @@ fetch("/students")
         </td>
 
         <td>
-        <span id="percent${s.id}"></span>
+        <span id="percent${s.id}">
+        </span>
         </td>
 
         </tr>
+
         `;
     });
-
-    toggleButtons();
-
+ toggleButtons();
 });
-
 
 // ---------- MARK ----------
 
