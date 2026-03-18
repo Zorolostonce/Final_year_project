@@ -82,7 +82,6 @@ fetch("/students")
 
         `;
     });
- toggleButtons();
 });
 
 // ---------- MARK ----------
