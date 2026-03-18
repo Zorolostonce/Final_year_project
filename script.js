@@ -24,7 +24,7 @@ let studentTotal = 0;
 
 
 // default teacher if no login
-let role =
+ role =
 localStorage.getItem("role") || "teacher";
 
 let username =
