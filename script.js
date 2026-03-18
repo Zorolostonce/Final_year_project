@@ -30,15 +30,16 @@ fetch("/students")
 
     // if student → show only himself
 
-    if (role === "student") {
+if (role === "student") {
 
-        data = data.filter(
-            s =>
-            s.name.toLowerCase()
-            === username.toLowerCase()
-        );
+    data = data.filter(
+        s =>
+        s.name.trim().toLowerCase()
+        ===
+        username.trim().toLowerCase()
+    );
 
-    }
+}
 
     studentTotal = data.length;
 
