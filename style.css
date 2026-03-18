@@ -1,0 +1,284 @@
+body {
+
+font-family: Arial, sans-serif;
+
+background: linear-gradient(
+135deg,
+#141e30,
+#243b55
+);
+
+margin: 0;
+
+text-align: center;
+
+color: white;
+
+animation: fadeIn 0.5s;
+
+}
+
+
+@keyframes fadeIn {
+
+from { opacity: 0; }
+
+to { opacity: 1; }
+
+}
+
+
+/* ---------- NAVBAR ---------- */
+
+.navbar {
+
+background: rgba(0,0,0,0.4);
+
+backdrop-filter: blur(10px);
+
+padding: 12px;
+
+box-shadow: 0 4px 10px rgba(0,0,0,0.4);
+
+}
+
+.navbar a {
+
+color: white;
+
+margin: 10px;
+
+text-decoration: none;
+
+font-weight: bold;
+
+transition: 0.3s;
+
+}
+
+.navbar a:hover {
+
+color: #00e5ff;
+
+transform: scale(1.1);
+
+}
+
+
+/* ---------- TITLE ---------- */
+
+h1 {
+
+margin: 20px;
+
+letter-spacing: 1px;
+
+}
+
+
+/* ---------- CARD ---------- */
+
+table,
+#summary,
+.chartBox {
+
+background: rgba(255,255,255,0.15);
+
+backdrop-filter: blur(10px);
+
+border-radius: 12px;
+
+margin: 20px auto;
+
+padding: 10px;
+
+box-shadow: 0 6px 20px rgba(0,0,0,0.4);
+
+color: white;
+
+}
+
+
+/* ---------- TABLE ---------- */
+
+table {
+
+border-collapse: collapse;
+
+width: 550px;
+
+}
+
+th {
+
+background: rgba(0,0,0,0.4);
+
+padding: 10px;
+
+}
+
+td {
+
+padding: 10px;
+
+border-bottom: 1px solid rgba(255,255,255,0.2);
+
+}
+
+tr:hover {
+
+background: rgba(255,255,255,0.1);
+
+}
+
+
+/* ---------- BUTTON ---------- */
+
+button {
+
+padding: 6px 12px;
+
+border-radius: 8px;
+
+border: none;
+
+cursor: pointer;
+
+transition: 0.2s;
+
+}
+
+button:hover {
+
+transform: scale(1.1);
+
+}
+
+button:disabled {
+
+background: gray;
+
+}
+
+
+.presentBtn {
+
+background: #00c853;
+
+color: white;
+
+}
+
+.absentBtn {
+
+background: white;
+
+color: black;
+
+}
+
+
+/* ---------- INPUT ---------- */
+
+input,
+select {
+
+padding: 6px 10px;
+
+border-radius: 6px;
+
+border: none;
+
+margin: 10px;
+
+font-size: 14px;
+
+}
+
+
+/* ---------- ADD STUDENT ---------- */
+
+#addStudentBox {
+
+margin: 10px;
+
+}
+
+
+/* ---------- SUMMARY ---------- */
+
+#summary {
+
+width: 320px;
+
+}
+
+
+/* ---------- BAR ---------- */
+
+.bar {
+
+width: 120px;
+
+height: 8px;
+
+background: rgba(255,255,255,0.2);
+
+border-radius: 5px;
+
+display: inline-block;
+
+margin-right: 5px;
+
+overflow: hidden;
+
+}
+
+.fill {
+
+height: 100%;
+
+background: #00e5ff;
+
+transition: width 0.4s;
+
+}
+
+.fill.low {
+
+background: orange;
+
+}
+
+.fill.high {
+
+background: #00c853;
+
+}
+
+.warn {
+
+font-size: 12px;
+
+font-weight: bold;
+
+margin-left: 6px;
+
+color: red;
+
+}
+
+.warn:empty {
+
+display: none;
+
+}
+
+
+/* ---------- CHART ---------- */
+
+.chartBox {
+
+width: 600px;
+
+}

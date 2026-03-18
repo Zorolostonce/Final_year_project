@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+<title>History</title>
+
+<link rel="stylesheet" href="style.css">
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+</head>
+
+<body>
+
+<div class="navbar">
+
+<a href="index.html">Dashboard</a>
+<a href="mark.html">Mark</a>
+<a href="history.html">History</a>
+<a href="chart.html">Chart</a>
+
+</div>
+<h1>History</h1>
+
+Date:
+<input type="date" id="date"
+onchange="reloadAll()">
+
+Subject:
+<select id="subject"
+onchange="reloadAll()">
+
+<option value="">All</option>
+<option value="ECD">ECD</option>
+<option value="ML">ML</option>
+<option value="MAD">MAD</option>
+<option value="OR">OR</option>
+
+</select>
+
+<table id="historyTable">
+
+<tr>
+<th>Date</th>
+<th>Subject</th>
+<th>Class</th>
+<th>Name</th>
+<th>Status</th>
+</tr>
+
+</table>
+
+<script src="script.js"></script>
+
+</body>
+</html>

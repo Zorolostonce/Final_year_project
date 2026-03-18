@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+<title>Dashboard</title>
+
+<link rel="stylesheet" href="style.css">
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+</head>
+
+<body>
+
+<div class="navbar">
+
+<a href="index.html">Dashboard</a>
+<a href="mark.html">Mark</a>
+<a href="history.html">History</a>
+<a href="chart.html">Chart</a>
+
+</div>
+
+
+<h1>Attendance Dashboard</h1>
+
+
+Date:
+<input type="date"
+id="date"
+onchange="reloadAll()"
+required>
+
+
+Subject:
+<select id="subject"
+onchange="reloadAll()">
+
+<option value="">All</option>
+<option value="ECD">ECD</option>
+<option value="ML">ML</option>
+<option value="MAD">MAD</option>
+<option value="OR">OR</option>
+
+</select>
+
+
+<hr>
+
+
+<div id="summary">
+
+<p>Total Classes:
+<span id="totalClass">0</span></p>
+
+<p>Total Present:
+<span id="presentCount">0</span></p>
+
+<p>Total Absent:
+<span id="absentCount">0</span></p>
+
+<p>Attendance %:
+<span id="percent">0</span>%</p>
+
+</div>
+
+
+<script src="script.js"></script>
+
+</body>
+</html>

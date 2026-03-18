@@ -1,0 +1,23 @@
+{
+  "name": "attendance-project",
+  "version": "1.0.0",
+  "main": "script.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "compress-buffer": "^1.2.0",
+    "cors": "^2.8.6",
+    "express": "^5.2.1",
+    "fs": "^0.0.1-security",
+    "hiredis": "^0.1.17",
+    "iconv": "^2.0.6",
+    "pg": "^1.1.0",
+    "stacktrace": "^1.1.0"
+  },
+  "description": ""
+}
