@@ -22,7 +22,6 @@ function login() {
         if (!data.success) {
 
             alert("Wrong login");
-
             return;
 
         }
@@ -32,15 +31,21 @@ function login() {
             data.role
         );
 
+        localStorage.setItem(
+            "username",
+            username
+        );
+
         if (data.role === "teacher") {
 
             window.location =
             "index.html";
 
-        } else {
+        }
+        else {
 
             window.location =
-            "history.html";
+            "index.html";
 
         }
 
