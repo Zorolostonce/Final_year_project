@@ -24,29 +24,38 @@ localStorage.getItem("role");
 let username =
 localStorage.getItem("username");
 
+
 fetch("/students")
 .then(res => res.json())
 .then(data => {
 
-    // if student → show only himself
+    // Teacher → show all
+    // Student → show only his name
 
-if (role === "student") {
+    if (role === "student" && username) {
 
-    data = data.filter(
-        s =>
-        s.name.trim().toLowerCase()
-        ===
-        username.trim().toLowerCase()
-    );
+        data = data.filter(
+            s =>
+            s.name.trim().toLowerCase() ===
+            username.trim().toLowerCase()
+        );
 
-}
+    }
 
     studentTotal = data.length;
 
     let div =
-    document.getElementById(
-        "studentsTable"
-    );
+    document.getElementById("studentsTable");
+
+    // clear old rows except header
+    div.innerHTML = `
+    <tr>
+        <th>Name</th>
+        <th>Present</th>
+        <th>Absent</th>
+        <th>Attendance</th>
+    </tr>
+    `;
 
     data.forEach(s => {
 
@@ -54,22 +63,22 @@ if (role === "student") {
 
         div.innerHTML += `
 
-        <tr>
+        <tr id="row${s.id}">
 
         <td>${s.name}</td>
 
         <td>
-        <button
+        <button class="presentBtn"
         id="p${s.id}"
-        onclick="mark(${s.id},'Present')">
+        onclick="mark(${s.id}, 'Present')">
         P
         </button>
         </td>
 
         <td>
-        <button
+        <button class="absentBtn"
         id="a${s.id}"
-        onclick="mark(${s.id},'Absent')">
+        onclick="mark(${s.id}, 'Absent')">
         A
         </button>
         </td>
@@ -82,10 +91,12 @@ if (role === "student") {
         </tr>
 
         `;
-    });
-    toggleButtons();
-});
 
+    });
+
+    toggleButtons();
+
+});
 // ---------- MARK ----------
 
 function mark(id,status){
