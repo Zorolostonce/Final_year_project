@@ -12,7 +12,21 @@
 </head>
 
 <body>
+<script>
 
+let role =
+localStorage.getItem("role");
+
+if (role !== "teacher") {
+
+    alert("Teacher only");
+
+    window.location =
+    "login.html";
+
+}
+
+</script>
 <div class="navbar">
 
 <a href="index.html">Dashboard</a>
