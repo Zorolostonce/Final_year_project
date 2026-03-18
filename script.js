@@ -88,7 +88,16 @@ fetch("/students")
 // ---------- MARK ----------
 
 function mark(id,status){
+    let role =
+localStorage.getItem("role");
 
+if (role !== "teacher") {
+
+    alert("Only teacher can mark");
+
+    return;
+
+}
     if(marked[id]) return;
 
     marked[id] = true;
