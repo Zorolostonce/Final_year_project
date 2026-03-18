@@ -83,6 +83,7 @@ if (role === "student") {
 
         `;
     });
+    toggleButtons();
 });
 
 // ---------- MARK ----------
