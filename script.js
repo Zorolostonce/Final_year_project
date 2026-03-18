@@ -132,7 +132,7 @@ document.getElementById("subject").value;
 let date =
 document.getElementById("date").value;
 
-fetch("/attendance",{
+fetch(window.location.origin + "/attendance",{
 
 method:"POST",
 
@@ -222,7 +222,7 @@ document.getElementById("date").value;
 let url=
 buildUrl("/report",subject,date);
 
-fetch(url)
+fetch(window.location.origin +url)
 .then(r=>r.json())
 .then(data=>{
 
@@ -268,11 +268,11 @@ buildUrl("/report",subject,date);
 let url2=
 buildUrl("/studentReport",subject,date);
 
-fetch(url1)
+fetch(window.location.origin +url1)
 .then(r=>r.json())
 .then(rep=>{
 
-fetch(url2)
+fetch(window.location.origin +url2)
 .then(r=>r.json())
 .then(data=>{
 
@@ -325,7 +325,7 @@ document.getElementById("date").value;
 let url=
 buildUrl("/history",subject,date);
 
-fetch(url)
+fetch(window.location.origin +url)
 .then(r=>r.json())
 .then(data=>{
 
@@ -402,7 +402,7 @@ oldStatus === "Present"
 ? "Absent"
 : "Present";
 
-fetch("/editAttendance",{
+fetch(window.location.origin +"/editAttendance",{
 
 method:"POST",
 
@@ -440,7 +440,7 @@ document.getElementById("date").value;
 let url=
 buildUrl("/summaryChart",subject,date);
 
-fetch(url)
+fetch(window.location.origin +url)
 .then(r=>r.json())
 .then(data=>{
 
@@ -544,7 +544,7 @@ alert("Enter name");
 return;
 }
 
-fetch("/addStudent", {
+fetch(window.location.origin +"/addStudent", {
 
 method: "POST",
 
