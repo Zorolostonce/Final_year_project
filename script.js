@@ -16,11 +16,13 @@ window.onload = function () {
 let marked = {};
 let studentTotal = 0;
 
+// default teacher if no login
 let role =
-localStorage.getItem("role");
+localStorage.getItem("role") || "teacher";
 
 let username =
-localStorage.getItem("username");
+localStorage.getItem("username") || "";
+
 
 
 // ---------- LOAD STUDENTS ----------
@@ -47,31 +49,52 @@ fetch("/students")
 
     data.forEach(s => {
 
-        // teacher → show all
-        if (role === "teacher") {
-
-            addRow(s);
-            return;
-
-        }
-
-        // student → show only his name
+        // student → only his row
         if (role === "student") {
 
             if (!username) return;
 
             if (
                 s.name.toLowerCase().trim()
-                ===
+                !==
                 username.toLowerCase().trim()
             ) {
-
-                addRow(s);
-
+                return;
             }
 
         }
 
+        studentTotal++;
+
+        marked[s.id] = false;
+
+        div.innerHTML += `
+
+        <tr id="row${s.id}">
+
+        <td>${s.name}</td>
+
+        <td>
+        <button id="p${s.id}"
+        onclick="mark(${s.id},'Present')">
+        P
+        </button>
+        </td>
+
+        <td>
+        <button id="a${s.id}"
+        onclick="mark(${s.id},'Absent')">
+        A
+        </button>
+        </td>
+
+        <td>
+        <span id="percent${s.id}"></span>
+        </td>
+
+        </tr>
+
+        `;
     });
 
     toggleButtons();
@@ -81,53 +104,12 @@ fetch("/students")
 }
 
 
-// helper
-function addRow(s) {
-
-    studentTotal++;
-
-    marked[s.id] = false;
-
-    let div =
-    document.getElementById("studentsTable");
-
-    div.innerHTML += `
-
-    <tr id="row${s.id}">
-
-    <td>${s.name}</td>
-
-    <td>
-    <button id="p${s.id}"
-    onclick="mark(${s.id},'Present')">
-    P
-    </button>
-    </td>
-
-    <td>
-    <button id="a${s.id}"
-    onclick="mark(${s.id},'Absent')">
-    A
-    </button>
-    </td>
-
-    <td>
-    <span id="percent${s.id}">
-    </span>
-    </td>
-
-    </tr>
-
-    `;
-
-}
-
 
 // ---------- MARK ----------
 
 function mark(id,status){
 
-if (localStorage.getItem("role") !== "teacher") {
+if (role !== "teacher") {
 
 alert("Only teacher can mark");
 return;
@@ -173,7 +155,8 @@ date:date
 }
 
 
-// ---------- ROUND COMPLETE ----------
+
+// ---------- ROUND ----------
 
 function checkRoundComplete(){
 
@@ -200,9 +183,11 @@ if(a) a.disabled=false;
 }
 
 reloadAll();
+
 }
 
 }
+
 
 
 // ---------- URL ----------
@@ -221,6 +206,7 @@ url+=(url.includes("?")?"&":"?")
 return url;
 
 }
+
 
 
 // ---------- REPORT ----------
@@ -263,6 +249,7 @@ percent.toFixed(0);
 });
 
 }
+
 
 
 // ---------- STUDENT REPORT ----------
@@ -322,6 +309,7 @@ percent.toFixed(0)+"%";
 });
 
 }
+
 
 
 // ---------- HISTORY ----------
@@ -391,6 +379,7 @@ Edit
 }
 
 
+
 // ---------- EDIT ----------
 
 function editAttendance(
@@ -401,10 +390,7 @@ student,
 oldStatus
 ){
 
-if (
-localStorage.getItem("role")
-!== "teacher"
-) {
+if (role !== "teacher") {
 
 alert("Only teacher can edit");
 return;
@@ -438,6 +424,7 @@ status:newStatus
 .then(()=>reloadAll());
 
 }
+
 
 
 // ---------- CHART ----------
@@ -501,6 +488,7 @@ data:values
 }
 
 
+
 // ---------- TOGGLE ----------
 
 function toggleButtons(){
@@ -526,6 +514,7 @@ a.disabled=disable;
 }
 
 
+
 // ---------- RELOAD ----------
 
 function reloadAll(){
@@ -540,7 +529,8 @@ toggleButtons();
 }
 
 
-// ---------- ADD STUDENT ----------
+
+// ---------- ADD ----------
 
 function addStudent() {
 
