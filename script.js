@@ -42,7 +42,7 @@ return el ? el.value : "";
 
 function getDate(){
 
-let el=document.getElementById("date");
+ el=document.getElementById("date");
 return el ? el.value : "";
 
 }
