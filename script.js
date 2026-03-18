@@ -31,8 +31,6 @@ fetch("/students")
 .then(res => res.json())
 .then(data => {
 
-    studentTotal = data.length;
-
     let div =
     document.getElementById("studentsTable");
 
@@ -45,8 +43,11 @@ fetch("/students")
     </tr>
     `;
 
+    studentTotal = 0;
+
     data.forEach(s => {
 
+        // if student login → show only his row
         if (
             role === "student" &&
             username &&
@@ -55,6 +56,8 @@ fetch("/students")
         ) {
             return;
         }
+
+        studentTotal++;
 
         marked[s.id] = false;
 
@@ -79,11 +82,11 @@ fetch("/students")
         </td>
 
         <td>
-        <span id="percent${s.id}">
-        </span>
+        <span id="percent${s.id}"></span>
         </td>
 
         </tr>
+
         `;
 
     });
@@ -91,6 +94,7 @@ fetch("/students")
     toggleButtons();
 
 });
+
 }
 
 
