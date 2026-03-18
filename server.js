@@ -8,29 +8,18 @@ app.use(express.json());
 app.use(cors());
 app.use(express.static(__dirname));
 
-
-// helper
-function readJSON(file) {
-    return JSON.parse(
-        fs.readFileSync(__dirname + "/" + file)
-    );
-}
-
-function writeJSON(file, data) {
-    fs.writeFileSync(
-        __dirname + "/" + file,
-        JSON.stringify(data, null, 2)
-    );
-}
+const studentsFile = __dirname + "/students.json";
+const attendanceFile = __dirname + "/attendance.json";
+const usersFile = __dirname + "/users.json";
 
 
 // ---------------- GET STUDENTS ----------------
 
 app.get("/students", (req, res) => {
 
-    res.json(
-        readJSON("students.json")
-    );
+    const data = fs.readFileSync(studentsFile);
+
+    res.json(JSON.parse(data));
 
 });
 
@@ -39,8 +28,9 @@ app.get("/students", (req, res) => {
 
 app.post("/addStudent", (req, res) => {
 
-    let students =
-        readJSON("students.json");
+    let students = JSON.parse(
+        fs.readFileSync(studentsFile)
+    );
 
     let name = req.body.name;
 
@@ -56,13 +46,13 @@ app.post("/addStudent", (req, res) => {
     }
 
     students.push({
-        id,
-        name
+        id: id,
+        name: name
     });
 
-    writeJSON(
-        "students.json",
-        students
+    fs.writeFileSync(
+        studentsFile,
+        JSON.stringify(students, null, 2)
     );
 
     res.send("Added");
@@ -74,11 +64,13 @@ app.post("/addStudent", (req, res) => {
 
 app.post("/attendance", (req, res) => {
 
-    let attendance =
-        readJSON("attendance.json");
+    let attendance = JSON.parse(
+        fs.readFileSync(attendanceFile)
+    );
 
-    let students =
-        readJSON("students.json");
+    let students = JSON.parse(
+        fs.readFileSync(studentsFile)
+    );
 
     let studentCount = students.length;
 
@@ -113,8 +105,8 @@ app.post("/attendance", (req, res) => {
     if (currentClass.length === studentCount) {
 
         classId++;
-        currentClass = [];
 
+        currentClass = [];
     }
 
     let already = currentClass.find(
@@ -128,17 +120,19 @@ app.post("/attendance", (req, res) => {
         return res.send("Already marked");
     }
 
-    attendance.push({
+    let record = {
         classId,
         student_id,
         status,
         subject,
         date
-    });
+    };
 
-    writeJSON(
-        "attendance.json",
-        attendance
+    attendance.push(record);
+
+    fs.writeFileSync(
+        attendanceFile,
+        JSON.stringify(attendance, null, 2)
     );
 
     res.send("Saved");
@@ -153,8 +147,9 @@ app.get("/report", (req, res) => {
     let subject = req.query.subject;
     let date = req.query.date;
 
-    let attendance =
-        readJSON("attendance.json");
+    let attendance = JSON.parse(
+        fs.readFileSync(attendanceFile)
+    );
 
     let present = 0;
     let absent = 0;
@@ -180,8 +175,10 @@ app.get("/report", (req, res) => {
 
     });
 
+    let totalClasses = classSet.size;
+
     res.json({
-        totalClasses: classSet.size,
+        totalClasses,
         present,
         absent
     });
@@ -196,11 +193,13 @@ app.get("/studentReport", (req, res) => {
     let subject = req.query.subject;
     let date = req.query.date;
 
-    let attendance =
-        readJSON("attendance.json");
+    let attendance = JSON.parse(
+        fs.readFileSync(attendanceFile)
+    );
 
-    let students =
-        readJSON("students.json");
+    let students = JSON.parse(
+        fs.readFileSync(studentsFile)
+    );
 
     let result = {};
 
@@ -236,11 +235,13 @@ app.get("/history", (req, res) => {
     let subject = req.query.subject;
     let date = req.query.date;
 
-    let attendance =
-        readJSON("attendance.json");
+    let attendance = JSON.parse(
+        fs.readFileSync(attendanceFile)
+    );
 
-    let students =
-        readJSON("students.json");
+    let students = JSON.parse(
+        fs.readFileSync(studentsFile)
+    );
 
     let result = [];
 
@@ -283,8 +284,9 @@ app.get("/history", (req, res) => {
 
 app.post("/editAttendance", (req, res) => {
 
-    let attendance =
-        readJSON("attendance.json");
+    let attendance = JSON.parse(
+        fs.readFileSync(attendanceFile)
+    );
 
     let {
         date,
@@ -294,7 +296,9 @@ app.post("/editAttendance", (req, res) => {
         status
     } = req.body;
 
-    attendance.forEach(a => {
+    for (let i = 0; i < attendance.length; i++) {
+
+        let a = attendance[i];
 
         if (
             a.date === date &&
@@ -304,12 +308,11 @@ app.post("/editAttendance", (req, res) => {
         ) {
             a.status = status;
         }
+    }
 
-    });
-
-    writeJSON(
-        "attendance.json",
-        attendance
+    fs.writeFileSync(
+        attendanceFile,
+        JSON.stringify(attendance, null, 2)
     );
 
     res.send("Updated");
@@ -324,8 +327,9 @@ app.get("/summaryChart", (req, res) => {
     let subject = req.query.subject;
     let date = req.query.date;
 
-    let attendance =
-        readJSON("attendance.json");
+    let attendance = JSON.parse(
+        fs.readFileSync(attendanceFile)
+    );
 
     let result = {};
 
@@ -375,7 +379,9 @@ app.post("/deleteAttendance", (req, res) => {
     } = req.body;
 
     let attendance =
-        readJSON("attendance.json");
+        JSON.parse(
+            fs.readFileSync(attendanceFile)
+        );
 
     attendance =
         attendance.filter(a => {
@@ -391,9 +397,9 @@ app.post("/deleteAttendance", (req, res) => {
 
         });
 
-    writeJSON(
-        "attendance.json",
-        attendance
+    fs.writeFileSync(
+        attendanceFile,
+        JSON.stringify(attendance, null, 2)
     );
 
     res.send("Deleted");
@@ -405,8 +411,9 @@ app.post("/deleteAttendance", (req, res) => {
 
 app.post("/login", (req, res) => {
 
-    let users =
-        readJSON("users.json");
+    let users = JSON.parse(
+        fs.readFileSync(usersFile)
+    );
 
     let { username, password } = req.body;
 
@@ -432,16 +439,12 @@ app.post("/login", (req, res) => {
 });
 
 
-// ---------------- START ----------------
+// ---------------- START SERVER ----------------
 
-const PORT =
-process.env.PORT || 3000;
+const PORT = process.env.PORT || 3000;
 
 app.listen(PORT, () => {
 
-    console.log(
-        "Server running on",
-        PORT
-    );
+    console.log("Server running on port", PORT);
 
 });
