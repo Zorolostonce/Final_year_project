@@ -1,4 +1,8 @@
+
 [
   { "username": "teacher", "password": "123", "role": "teacher" },
-  { "username": "student", "password": "123", "role": "student" }
+
+  { "username": "Monish", "password": "123", "role": "student" },
+  { "username": "Rahul", "password": "123", "role": "student" },
+  { "username": "Kiran", "password": "123", "role": "student" }
 ]
