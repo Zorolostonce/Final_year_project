@@ -96,14 +96,16 @@ div.innerHTML += `
 <td>${s.name}</td>
 
 <td>
-<button id="p${s.id}"
+<button class="presentBtn"
+id="p${s.id}"
 onclick="mark(${s.id},'Present')">
 P
 </button>
 </td>
 
 <td>
-<button id="a${s.id}"
+<button class="absentBtn"
+id="a${s.id}"
 onclick="mark(${s.id},'Absent')">
 A
 </button>
@@ -309,9 +311,32 @@ document.getElementById("percent"+id);
 
 if(!el) continue;
 
-el.innerText=
-percent.toFixed(0)+"%";
+let color="green";
+let warn="";
 
+if(percent<50){
+color="red";
+warn="LOW";
+}
+else if(percent<75){
+color="orange";
+warn="WARN";
+}
+
+el.innerHTML=`
+<div class="bar">
+<div class="fill"
+style="width:${percent}%;
+background:${color}">
+</div>
+</div>
+
+${percent.toFixed(0)}%
+
+<span class="warn">
+${warn}
+</span>
+`;
 }
 
 });
@@ -482,7 +507,13 @@ data:{
 labels:labels,
 datasets:[{
 label:"Attendance %",
-data:values
+data:values,
+backgroundColor:[
+"red",
+"orange",
+"green",
+"blue"
+]
 }]
 }
 
