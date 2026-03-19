@@ -25,6 +25,19 @@ if (!role) {
 
 }
 
+let round =
+localStorage.getItem("roundInProgress");
+
+let page =
+window.location.pathname;
+
+if(round && !page.includes("mark")){
+
+alert("Finish attendance first");
+
+window.location = "mark.html";
+
+}
 </script>
   
 <div class="navbar">
