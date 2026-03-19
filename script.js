@@ -401,20 +401,28 @@ warn="WARN";
 }
 
 
+// create bar once if not exists
+if(!el.querySelector(".bar")){
+
 el.innerHTML = `
 <div class="bar">
-<div class="fill"
-style="width:${percent}%;
-background:${color}">
+<div class="fill"></div>
 </div>
-</div>
-
-${percent.toFixed(0)}%
-
-<span class="warn">
-${warn}
-</span>
+<span class="percentText"></span>
+<span class="warn"></span>
 `;
+
+}
+
+let fill = el.querySelector(".fill");
+let text = el.querySelector(".percentText");
+let warnEl = el.querySelector(".warn");
+
+fill.style.width = percent + "%";
+fill.style.background = color;
+
+text.innerText = percent.toFixed(0) + "%";
+warnEl.innerText = warn;
 
 }
 
