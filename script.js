@@ -378,6 +378,16 @@ table.innerHTML=`
 
 data.forEach(a=>{
 
+// student should see only his data
+if (role === "student") {
+
+if (
+a.name.toLowerCase().trim()
+!== username.toLowerCase().trim()
+) return;
+
+}
+
 table.innerHTML+=`
 <tr>
 
