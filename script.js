@@ -91,7 +91,18 @@ s.name.toLowerCase().trim()
 
 studentTotal++;
 
+
+// ✅ restore marked state
+if(localStorage.getItem("marked_"+s.id)){
+
+marked[s.id] = true;
+
+}else{
+
 marked[s.id] = false;
+
+}
+
 
 div.innerHTML += `
 
@@ -122,6 +133,21 @@ A
 </tr>
 
 `;
+
+
+// ✅ disable buttons if already marked
+if(marked[s.id]){
+
+let p =
+document.getElementById("p"+s.id);
+
+let a =
+document.getElementById("a"+s.id);
+
+if(p) p.disabled = true;
+if(a) a.disabled = true;
+
+}
 
 });
 
@@ -164,6 +190,10 @@ localStorage.setItem("roundInProgress","1");
 if(marked[id]) return;
 
 marked[id] = true;
+
+// ✅ save marked state
+localStorage.setItem("marked_"+id,"1");
+
 
 let p=document.getElementById("p"+id);
 let a=document.getElementById("a"+id);
@@ -209,6 +239,9 @@ if(count===studentTotal){
 for(let id in marked){
 
 marked[id]=false;
+
+// ✅ remove saved marked state
+localStorage.removeItem("marked_"+id);
 
 let p=document.getElementById("p"+id);
 let a=document.getElementById("a"+id);
