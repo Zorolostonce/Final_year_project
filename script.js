@@ -508,15 +508,6 @@ let values=[];
 
 for(let s in data){
 
-if (role === "student") {
-
-if (
-s.toLowerCase().trim()
-!== username.toLowerCase().trim()
-) continue;
-
-}
-
 let p=data[s].present||0;
 let t=data[s].total||0;
 
