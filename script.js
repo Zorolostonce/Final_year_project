@@ -736,11 +736,14 @@ a.disabled=disable;
 function reloadAll(){
 
 loadStudents();
+
+setTimeout(()=>{
 loadReport();
 loadStudentReport();
 loadHistory();
 loadChart();
 toggleButtons();
+},100);
 
 }
 
