@@ -141,6 +141,22 @@ alert("Only teacher can mark");
 return;
 }
 
+
+// 🔒 lock subject + date while marking
+
+let subjectSelect =
+document.getElementById("subject");
+
+let dateInput =
+document.getElementById("date");
+
+if(subjectSelect)
+subjectSelect.disabled = true;
+
+if(dateInput)
+dateInput.disabled = true;
+
+
 if(marked[id]) return;
 
 marked[id] = true;
@@ -172,8 +188,6 @@ date:getDate()
 .then(()=>checkRoundComplete());
 
 }
-
-
 // ---------- ROUND ----------
 
 function checkRoundComplete(){
@@ -199,6 +213,22 @@ if(p) p.disabled=false;
 if(a) a.disabled=false;
 
 }
+
+
+// 🔓 unlock subject + date after round
+
+let subjectSelect =
+document.getElementById("subject");
+
+let dateInput =
+document.getElementById("date");
+
+if(subjectSelect)
+subjectSelect.disabled = false;
+
+if(dateInput)
+dateInput.disabled = false;
+
 
 reloadAll();
 
