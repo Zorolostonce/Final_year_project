@@ -50,6 +50,21 @@ app.post("/addStudent", (req, res) => {
         name: name
     });
 
+    let users =
+JSON.parse(
+fs.readFileSync("users.json")
+);
+
+users.push({
+username:name,
+password:"123",
+role:"student"
+});
+
+fs.writeFileSync(
+"users.json",
+JSON.stringify(users,null,2)
+);
     fs.writeFileSync(
         studentsFile,
         JSON.stringify(students, null, 2)
