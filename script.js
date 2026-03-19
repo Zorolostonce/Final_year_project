@@ -313,63 +313,68 @@ function loadStudentReport(){
 let subject=getSubject();
 let date=getDate();
 
-let url1=
-buildUrl("/report",subject,date);
-
-let url2=
-buildUrl("/studentReport",subject,date);
-
-fetch(url1)
+fetch("/history")
 .then(r=>r.json())
-.then(rep=>{
+.then(hist=>{
 
-fetch(url2)
-.then(r=>r.json())
-.then(data=>{
+let map = {};
 
-let totalClasses=
-rep.totalClasses;
+hist.forEach(h=>{
 
-for(let id in data){
+// subject filter
+if(subject && subject!="" && h.subject!==subject)
+return;
 
-// student filter (same as before)
-if (role === "student") {
+// date filter
+if(date && h.date!==date)
+return;
 
-let rowName =
-document
-.querySelector(
-"#row"+id+" td"
-)?.innerText;
 
-if (
-rowName &&
-rowName.toLowerCase().trim()
+// student login filter
+if(role==="student"){
+
+if(
+h.name.toLowerCase().trim()
 !== username.toLowerCase().trim()
-) continue;
+) return;
 
 }
 
-let present=data[id];
+
+if(!map[h.student_id]){
+
+map[h.student_id] = {
+present:0,
+total:0
+};
+
+}
+
+map[h.student_id].total++;
+
+if(h.status==="Present")
+map[h.student_id].present++;
+
+});
+
+
+// update UI
+
+for(let id in map){
+
+let present = map[id].present;
+let total = map[id].total;
 
 let percent = 0;
 
-if (totalClasses > 0) {
+if(total>0)
+percent = (present/total)*100;
 
-percent =
-(present / totalClasses) * 100;
-
-}
-
-// fix >100 bug
-if (percent > 100)
-percent = 100;
-
-// fix negative / NaN
-if (!percent || percent < 0)
-percent = 0;
+if(percent>100)
+percent=100;
 
 
-let el=
+let el =
 document.getElementById("percent"+id);
 
 if(!el) continue;
@@ -388,7 +393,7 @@ warn="WARN";
 }
 
 
-el.innerHTML=`
+el.innerHTML = `
 <div class="bar">
 <div class="fill"
 style="width:${percent}%;
@@ -407,10 +412,7 @@ ${warn}
 
 });
 
-});
-
 }
-
 
 // ---------- HISTORY ----------
 
