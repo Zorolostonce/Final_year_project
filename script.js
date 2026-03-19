@@ -235,21 +235,6 @@ fetch(url)
 .then(r=>r.json())
 .then(data=>{
 
-if (role === "student") {
-
-// student total = his present / his total
-
-let present = data.present;
-let absent = data.absent;
-
-let total = present + absent;
-
-let percent = 0;
-
-if (total > 0) {
-percent = (present / total) * 100;
-}
-
 let t=document.getElementById("totalClass");
 let p=document.getElementById("presentCount");
 let a=document.getElementById("absentCount");
@@ -257,19 +242,9 @@ let pr=document.getElementById("percent");
 
 if(!t||!p||!a||!pr) return;
 
-t.innerText = total;
-p.innerText = present;
-a.innerText = absent;
-pr.innerText = percent.toFixed(0);
 
-return;
-}
-let t=document.getElementById("totalClass");
-let p=document.getElementById("presentCount");
-let a=document.getElementById("absentCount");
-let pr=document.getElementById("percent");
-
-if(!t||!p||!a||!pr) return;
+// teacher → show all
+if(role === "teacher"){
 
 t.innerText=data.totalClasses;
 p.innerText=data.present;
@@ -278,18 +253,53 @@ a.innerText=data.absent;
 let percent=0;
 
 if(data.totalClasses>0){
+percent =
+data.present /
+(data.present+data.absent||1) * 100;
+}
 
-percent=
-data.present/
-(data.present+data.absent||1)
-*100;
+pr.innerText = percent.toFixed(0);
+
+return;
+}
+
+
+// student → calculate from history
+fetch("/history")
+.then(r=>r.json())
+.then(hist=>{
+
+let present = 0;
+let absent = 0;
+
+hist.forEach(h=>{
+
+if(
+h.name.toLowerCase().trim()
+=== username.toLowerCase().trim()
+){
+
+if(h.status==="Present") present++;
+else absent++;
 
 }
 
-if(percent>100) percent=100;
+});
 
-pr.innerText=
-percent.toFixed(0);
+let total = present + absent;
+
+let percent = 0;
+
+if(total>0){
+percent = (present/total)*100;
+}
+
+t.innerText = total;
+p.innerText = present;
+a.innerText = absent;
+pr.innerText = percent.toFixed(0);
+
+});
 
 });
 
@@ -530,6 +540,11 @@ fetch(url)
 let labels=[];
 let values=[];
 
+
+// ---------- TEACHER ----------
+
+if(role === "teacher"){
+
 for(let s in data){
 
 let p=data[s].present||0;
@@ -544,6 +559,79 @@ labels.push(s);
 values.push(percent);
 
 }
+
+drawChart(labels,values);
+return;
+
+}
+
+
+// ---------- STUDENT ----------
+
+fetch("/history")
+.then(r=>r.json())
+.then(hist=>{
+
+let subjectMap={};
+
+hist.forEach(h=>{
+
+if(
+h.name.toLowerCase().trim()
+!== username.toLowerCase().trim()
+) return;
+
+
+// filter subject
+if(subject && subject!="" && h.subject!==subject)
+return;
+
+
+// filter date
+if(date && h.date!==date)
+return;
+
+
+if(!subjectMap[h.subject]){
+
+subjectMap[h.subject]={
+p:0,
+t:0
+};
+
+}
+
+subjectMap[h.subject].t++;
+
+if(h.status==="Present")
+subjectMap[h.subject].p++;
+
+});
+
+
+for(let s in subjectMap){
+
+let p=subjectMap[s].p;
+let t=subjectMap[s].t;
+
+let percent=0;
+
+if(t>0)
+percent=(p/t)*100;
+
+labels.push(s);
+values.push(percent);
+
+}
+
+drawChart(labels,values);
+
+});
+
+});
+
+
+function drawChart(labels,values){
 
 let ctx=
 document.getElementById("summaryChart");
@@ -570,11 +658,20 @@ backgroundColor:[
 "blue"
 ]
 }]
+},
+
+options:{
+scales:{
+y:{
+beginAtZero:true,
+max:100
+}
+}
 }
 
 });
 
-});
+}
 
 }
 
