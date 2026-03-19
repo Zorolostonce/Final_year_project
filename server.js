@@ -32,39 +32,67 @@ app.post("/addStudent", (req, res) => {
         fs.readFileSync(studentsFile)
     );
 
+    let users = JSON.parse(
+        fs.readFileSync("users.json")
+    );
+
     let name = req.body.name;
 
     if (!name) {
         return res.send("No name");
     }
 
+    name = name.trim();
+
+    // ✅ check duplicate student
+    let existsStudent = students.find(
+        s =>
+        s.name.toLowerCase().trim()
+        ===
+        name.toLowerCase().trim()
+    );
+
+    if (existsStudent) {
+        return res.send("Student already exists");
+    }
+
+    // ✅ check duplicate user
+    let existsUser = users.find(
+        u =>
+        u.username.toLowerCase().trim()
+        ===
+        name.toLowerCase().trim()
+    );
+
+    if (existsUser) {
+        return res.send("User already exists");
+    }
+
     let id = 1;
 
     if (students.length > 0) {
         id =
-            students[students.length - 1].id + 1;
+        students[students.length - 1].id + 1;
     }
 
+    // add student
     students.push({
         id: id,
         name: name
     });
 
-    let users =
-JSON.parse(
-fs.readFileSync("users.json")
-);
+    // add user login
+    users.push({
+        username: name,
+        password: "123",
+        role: "student"
+    });
 
-users.push({
-username:name,
-password:"123",
-role:"student"
-});
+    fs.writeFileSync(
+        "users.json",
+        JSON.stringify(users, null, 2)
+    );
 
-fs.writeFileSync(
-"users.json",
-JSON.stringify(users,null,2)
-);
     fs.writeFileSync(
         studentsFile,
         JSON.stringify(students, null, 2)
