@@ -1,21 +1,24 @@
 let reportLoading = false;
 window.onload = function () {
 
-    let today =
-    new Date().toISOString().slice(0,10);
+let today =
+new Date().toISOString().slice(0,10);
 
-    let dateInput =
-    document.getElementById("date");
+let dateInput =
+document.getElementById("date");
 
-    if (dateInput) {
-        dateInput.value = today;
-    }
+if (dateInput) {
+dateInput.value = today;
+}
 
-    if (typeof loadStudents === "function") loadStudents();
-    if (typeof loadReport === "function") loadReport();
-    if (typeof loadStudentReport === "function") loadStudentReport();
-    if (typeof loadHistory === "function") loadHistory();
-    if (typeof loadChart === "function") loadChart();
+loadStudents();
+
+setTimeout(()=>{
+loadReport();
+loadStudentReport();
+loadHistory();
+loadChart();
+},100);
 
 };
 
