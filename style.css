@@ -301,3 +301,9 @@ transition:width 0.2s linear;
     from { opacity: 0.4; }
     to { opacity: 1; }
 }
+
+.navbar i {
+
+font-size: 18px;
+
+}
