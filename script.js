@@ -332,6 +332,7 @@ rep.totalClasses;
 
 for(let id in data){
 
+// student filter (keep same)
 if (role === "student") {
 
 let rowName =
@@ -350,22 +351,27 @@ rowName.toLowerCase().trim()
 
 let present=data[id];
 
-let percent=0;
+let percent = 0;
 
-if(totalClasses>0){
+if (totalClasses > 0) {
 
-percent=
-present/
-totalClasses
-*100;
+percent =
+(present / totalClasses) * 100;
 
 }
 
+// fix >100 bug
+if (percent > 100) percent = 100;
+
+
+// element
 let el=
 document.getElementById("percent"+id);
 
 if(!el) continue;
 
+
+// color logic
 let color="green";
 let warn="";
 
@@ -378,6 +384,8 @@ color="orange";
 warn="WARN";
 }
 
+
+// bar UI (unchanged)
 el.innerHTML=`
 <div class="bar">
 <div class="fill"
@@ -392,6 +400,7 @@ ${percent.toFixed(0)}%
 ${warn}
 </span>
 `;
+
 }
 
 });
