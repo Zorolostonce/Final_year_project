@@ -122,7 +122,7 @@ A
 
 });
 
-toggleButtons();
+setTimeout(toggleButtons,50);
 
 });
 
