@@ -1,3 +1,4 @@
+let reportLoading = false;
 window.onload = function () {
 
     let today =
@@ -309,7 +310,8 @@ pr.innerText = percent.toFixed(0);
 // ---------- STUDENT REPORT ----------
 
 function loadStudentReport(){
-
+if(reportLoading) return;
+reportLoading = true;
 let subject=getSubject();
 let date=getDate();
 
@@ -425,7 +427,7 @@ text.innerText = percent.toFixed(0) + "%";
 warnEl.innerText = warn;
 
 }
-
+reportLoading = false;
 });
 
 }
