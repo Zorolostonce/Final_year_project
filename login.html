@@ -2,15 +2,18 @@
 <html>
 <head>
     <title>Login</title>
+
     <style>
-        body {
+
+body {
 
 font-family: Arial, sans-serif;
 
 background: linear-gradient(
 135deg,
-#4facfe,
-#00c6ff
+#0f2027,
+#203a43,
+#2c5364
 );
 
 margin: 0;
@@ -28,17 +31,19 @@ align-items: center;
 
 .loginBox {
 
-background: white;
+background: #2f3e52;
 
 padding: 30px;
 
 border-radius: 12px;
 
-width: 300px;
+width: 320px;
 
-box-shadow: 0 6px 20px rgba(0,0,0,0.3);
+box-shadow: 0 8px 25px rgba(0,0,0,0.5);
 
 text-align: center;
+
+color: white;
 
 animation: fadeIn 0.3s;
 
@@ -60,13 +65,15 @@ margin-bottom: 20px;
 
 width: 90%;
 
-padding: 8px;
+padding: 10px;
 
-margin: 8px;
+margin: 8px 0;
 
 border-radius: 6px;
 
-border: 1px solid #ccc;
+border: none;
+
+outline: none;
 
 }
 
@@ -75,52 +82,60 @@ border: 1px solid #ccc;
 
 .loginBox button {
 
-padding: 8px 20px;
+margin-top: 10px;
+
+padding: 10px 20px;
 
 border: none;
 
 border-radius: 6px;
 
-background: #1e90ff;
+background: #1abc9c;
 
 color: white;
 
 cursor: pointer;
 
-margin-top: 10px;
+font-weight: bold;
 
 }
 
 .loginBox button:hover {
 
-background: #0d6efd;
+background: #16a085;
 
 }
 
 
-/* animation */
-
 @keyframes fadeIn {
 
-from { opacity: 0; transform: scale(0.95); }
+from { opacity: 0; transform: scale(0.9); }
 
 to { opacity: 1; transform: scale(1); }
 
 }
+
     </style>
+
 </head>
 
 <body>
 
+
+<div class="loginBox">
+
 <h2>Login</h2>
 
 <input id="username" placeholder="Username">
-<br><br>
 
 <input id="password" type="password" placeholder="Password">
-<br><br>
+
+<br>
 
 <button onclick="login()">Login</button>
+
+</div>
+
 
 <script src="login.js"></script>
 
