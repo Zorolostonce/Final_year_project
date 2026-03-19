@@ -157,6 +157,10 @@ if(dateInput)
 dateInput.disabled = true;
 
 
+// ✅ mark round started
+localStorage.setItem("roundInProgress","1");
+
+
 if(marked[id]) return;
 
 marked[id] = true;
@@ -230,12 +234,15 @@ if(dateInput)
 dateInput.disabled = false;
 
 
+// ✅ round finished
+localStorage.removeItem("roundInProgress");
+
+
 reloadAll();
 
 }
 
 }
-
 
 // ---------- URL ----------
 
