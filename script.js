@@ -234,11 +234,35 @@ buildUrl("/report",subject,date);
 fetch(url)
 .then(r=>r.json())
 .then(data=>{
+
 if (role === "student") {
 
-// optional: student only view percent
-// keep as is if you want
+// student total = his present / his total
 
+let present = data.present;
+let absent = data.absent;
+
+let total = present + absent;
+
+let percent = 0;
+
+if (total > 0) {
+percent = (present / total) * 100;
+}
+
+let t=document.getElementById("totalClass");
+let p=document.getElementById("presentCount");
+let a=document.getElementById("absentCount");
+let pr=document.getElementById("percent");
+
+if(!t||!p||!a||!pr) return;
+
+t.innerText = total;
+p.innerText = present;
+a.innerText = absent;
+pr.innerText = percent.toFixed(0);
+
+return;
 }
 let t=document.getElementById("totalClass");
 let p=document.getElementById("presentCount");
