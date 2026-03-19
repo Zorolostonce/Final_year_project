@@ -293,6 +293,22 @@ rep.totalClasses;
 
 for(let id in data){
 
+if (role === "student") {
+
+let rowName =
+document
+.querySelector(
+"#row"+id+" td"
+)?.innerText;
+
+if (
+rowName &&
+rowName.toLowerCase().trim()
+!== username.toLowerCase().trim()
+) continue;
+
+}
+
 let present=data[id];
 
 let percent=0;
