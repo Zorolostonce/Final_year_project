@@ -787,3 +787,11 @@ reloadAll();
 });
 
 }
+function logout(){
+
+localStorage.removeItem("role");
+localStorage.removeItem("username");
+
+window.location = "login.html";
+
+}
