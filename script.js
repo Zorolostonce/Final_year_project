@@ -341,6 +341,7 @@ h.name.toLowerCase().trim()
 }
 
 
+// create object
 if(!map[h.student_id]){
 
 map[h.student_id] = {
@@ -350,8 +351,12 @@ total:0
 
 }
 
+
+// count total classes
 map[h.student_id].total++;
 
+
+// count present
 if(h.status==="Present")
 map[h.student_id].present++;
 
@@ -372,6 +377,9 @@ percent = (present/total)*100;
 
 if(percent>100)
 percent=100;
+
+if(percent<0 || isNaN(percent))
+percent=0;
 
 
 let el =
