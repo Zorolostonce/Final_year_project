@@ -307,3 +307,13 @@ transition:width 0.2s linear;
 font-size: 18px;
 
 }
+.navbar {
+
+display: flex;
+justify-content: space-between;
+align-items: center;
+
+background: #222;
+padding: 10px;
+
+}
