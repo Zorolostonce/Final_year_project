@@ -309,12 +309,18 @@ font-size: 18px;
 }
 .navbar {
 
+width: 100%;
+
 display: flex;
 justify-content: center;
-gap: 30px;
 
-background: #222;
-padding: 10px;
+gap: 40px;
+
+padding: 10px 0;
+
+background: rgba(0,0,0,0.3);
+
+backdrop-filter: blur(4px);
 
 }
 
