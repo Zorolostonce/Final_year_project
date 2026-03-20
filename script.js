@@ -908,14 +908,18 @@ if(role !== "teacher") return;
 let subject = getSubject();
 let date = getDate();
 
+let typeEl =
+document.getElementById("reportType");
+
+let type =
+typeEl ? typeEl.value : "day";
+
+
+// get report total classes
 let urlReport =
 buildUrl("/report",subject,date);
 
-let urlStudent =
-buildUrl("/studentReport",subject,date);
 
-
-// get total classes
 fetch(urlReport)
 .then(r=>r.json())
 .then(rep=>{
@@ -924,16 +928,15 @@ let totalClasses =
 rep.totalClasses || 0;
 
 
-// get student list
+// get history (filtered manually)
+fetch("/history")
+.then(r=>r.json())
+.then(hist=>{
+
+
 fetch("/students")
 .then(r=>r.json())
 .then(students=>{
-
-
-// get student attendance
-fetch(urlStudent)
-.then(r=>r.json())
-.then(data=>{
 
 let div =
 document.getElementById("studentSummary");
@@ -943,20 +946,41 @@ if(!div) return;
 div.innerHTML =
 "<h3>Student Report</h3>";
 
+
 students.forEach(s=>{
 
-let present =
-data[s.id] || 0;
+let present = 0;
+
+hist.forEach(h=>{
+
+if(
+h.name === s.name
+){
+
+// subject filter
+if(subject && subject!="" && h.subject!==subject)
+return;
+
+// date filter (day only)
+if(type==="day" && date && h.date!==date)
+return;
+
+if(h.status==="Present")
+present++;
+
+}
+
+});
+
 
 let percent = 0;
 
-if(totalClasses > 0){
+if(totalClasses>0){
 percent =
 (present / totalClasses) * 100;
 }
 
 div.innerHTML +=
-
 "<div>"
 +
 s.name +
