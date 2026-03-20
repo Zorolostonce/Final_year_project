@@ -950,34 +950,40 @@ div.innerHTML =
 students.forEach(s=>{
 
 let present = 0;
+let classSet = new Set();
 
 hist.forEach(h=>{
 
-if(
-h.name === s.name
-){
+if(h.name !== s.name) return;
 
-// subject filter
 if(subject && subject!="" && h.subject!==subject)
 return;
 
-// date filter (day only)
 if(type==="day" && date && h.date!==date)
 return;
+
+
+// count unique class for this student
+let key =
+h.date + "_" +
+h.subject + "_" +
+h.classId;
+
+classSet.add(key);
 
 if(h.status==="Present")
 present++;
 
-}
-
 });
 
+let totalForStudent =
+classSet.size;
 
 let percent = 0;
 
-if(totalClasses>0){
+if(totalForStudent > 0){
 percent =
-(present / totalClasses) * 100;
+(present / totalForStudent) * 100;
 }
 
 div.innerHTML +=
