@@ -905,7 +905,31 @@ function loadStudentSummary(){
 
 if(role !== "teacher") return;
 
-fetch("/studentReport")
+let subject = getSubject();
+let date = getDate();
+
+let url1 =
+buildUrl("/report",subject,date);
+
+let url2 =
+buildUrl("/studentReport",subject,date);
+
+
+// get total classes first
+fetch(url1)
+.then(r=>r.json())
+.then(rep=>{
+
+let totalClasses =
+rep.totalClasses;
+
+
+// get student data
+fetch("/students")
+.then(r=>r.json())
+.then(students=>{
+
+fetch(url2)
 .then(r=>r.json())
 .then(data=>{
 
@@ -917,21 +941,39 @@ if(!div) return;
 div.innerHTML =
 "<h3>Student Report</h3>";
 
-for(let id in data){
+students.forEach(s=>{
 
-let percent = data[id];
+let present =
+data[s.id] || 0;
+
+let percent = 0;
+
+if(totalClasses>0){
+percent =
+(present / totalClasses) * 100;
+}
 
 div.innerHTML +=
 
 "<div>"
 +
-id +
+s.name
++
 " → "
 +
-percent +
+percent.toFixed(0)
++
 "%"
 +
 "</div>";
+
+});
+
+});
+
+});
+
+});
 
 }
 
