@@ -248,21 +248,15 @@ let end = new Date(date);
 // ---------- RANGE ----------
 
 if(type==="week"){
-
 start.setDate(start.getDate()-7);
-
 }
 
 if(type==="month"){
-
 start.setMonth(start.getMonth()-1);
-
 }
 
 if(type==="year"){
-
 start.setFullYear(start.getFullYear()-1);
-
 }
 
 
@@ -270,6 +264,8 @@ start.setFullYear(start.getFullYear()-1);
 
 let present = 0;
 let absent = 0;
+
+let classSet = new Set(); // ✅ for unique class count
 
 attendance.forEach(a=>{
 
@@ -279,20 +275,25 @@ if(d < start) return;
 if(d > end) return;
 
 if(subject && subject!==""){
-
 if(a.subject !== subject) return;
-
 }
 
+// count present/absent
 if(a.status==="Present") present++;
 else absent++;
 
-});
+// count unique class
+classSet.add(
+a.date + "_" +
+a.subject + "_" +
+a.classId
+);
 
+});
 
 res.json({
 
-totalClasses: present+absent,
+totalClasses: classSet.size, // ✅ correct
 present: present,
 absent: absent
 
