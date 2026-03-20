@@ -302,8 +302,33 @@ function loadReport(){
 let subject=getSubject();
 let date=getDate();
 
-let url=
+
+// ✅ new report type
+let typeEl =
+document.getElementById("reportType");
+
+let type =
+typeEl ? typeEl.value : "day";
+
+
+// ✅ use new API if not day
+let url;
+
+if(type === "day"){
+
+url =
 buildUrl("/report",subject,date);
+
+}else{
+
+url =
+"/reportRange?date="
++date+
+"&type="+type+
+"&subject="+subject;
+
+}
+
 
 fetch(url)
 .then(r=>r.json())
@@ -352,6 +377,15 @@ if(
 h.name.toLowerCase().trim()
 === username.toLowerCase().trim()
 ){
+
+// subject filter
+if(subject && subject!="" && h.subject!==subject)
+return;
+
+// date filter (only for day)
+if(type==="day" && date && h.date!==date)
+return;
+
 
 if(h.status==="Present") present++;
 else absent++;
