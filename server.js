@@ -481,6 +481,79 @@ app.post("/login", (req, res) => {
 
 });
 
+//---------------Attendance Report-------------------
+
+app.get("/reportRange",(req,res)=>{
+
+let history =
+JSON.parse(
+fs.readFileSync("history.json")
+);
+
+let date = req.query.date;
+let type = req.query.type;
+
+let d = new Date(date);
+
+let start, end;
+
+if(type==="week"){
+
+start = new Date(d);
+start.setDate(d.getDate()-7);
+
+end = d;
+
+}
+
+else if(type==="month"){
+
+start = new Date(d.getFullYear(), d.getMonth(), 1);
+end = d;
+
+}
+
+else if(type==="year"){
+
+start = new Date(d.getFullYear(),0,1);
+end = d;
+
+}
+
+else{
+
+start = d;
+end = d;
+
+}
+
+let present=0;
+let absent=0;
+
+history.forEach(h=>{
+
+let hd = new Date(h.date);
+
+if(hd>=start && hd<=end){
+
+if(h.status==="Present")
+present++;
+else
+absent++;
+
+}
+
+});
+
+res.json({
+
+present,
+absent,
+totalClasses:present+absent
+
+});
+
+});
 
 // ---------------- START SERVER ----------------
 
