@@ -16,6 +16,7 @@ loadStudents();
 setTimeout(()=>{
 loadReport();
 loadStudentReport();
+loadStudentSummary();
 loadHistory();
 loadChart();
 },100);
