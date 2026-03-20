@@ -228,6 +228,77 @@ app.get("/report", (req, res) => {
 
 });
 
+//---------------Attendance Report-------------------
+
+app.get("/reportRange", (req,res)=>{
+
+let attendance =
+JSON.parse(
+fs.readFileSync("attendance.json")
+);
+
+let subject = req.query.subject || "";
+let date = req.query.date;
+let type = req.query.type || "day";
+
+let start = new Date(date);
+let end = new Date(date);
+
+
+// ---------- RANGE ----------
+
+if(type==="week"){
+
+start.setDate(start.getDate()-7);
+
+}
+
+if(type==="month"){
+
+start.setMonth(start.getMonth()-1);
+
+}
+
+if(type==="year"){
+
+start.setFullYear(start.getFullYear()-1);
+
+}
+
+
+// ---------- FILTER ----------
+
+let present = 0;
+let absent = 0;
+
+attendance.forEach(a=>{
+
+let d = new Date(a.date);
+
+if(d < start) return;
+if(d > end) return;
+
+if(subject && subject!==""){
+
+if(a.subject !== subject) return;
+
+}
+
+if(a.status==="Present") present++;
+else absent++;
+
+});
+
+
+res.json({
+
+totalClasses: present+absent,
+present: present,
+absent: absent
+
+});
+
+});
 
 // ---------------- STUDENT REPORT ----------------
 
@@ -481,79 +552,7 @@ app.post("/login", (req, res) => {
 
 });
 
-//---------------Attendance Report-------------------
 
-app.get("/reportRange",(req,res)=>{
-
-let history =
-JSON.parse(
-fs.readFileSync("history.json")
-);
-
-let date = req.query.date;
-let type = req.query.type;
-
-let d = new Date(date);
-
-let start, end;
-
-if(type==="week"){
-
-start = new Date(d);
-start.setDate(d.getDate()-7);
-
-end = d;
-
-}
-
-else if(type==="month"){
-
-start = new Date(d.getFullYear(), d.getMonth(), 1);
-end = d;
-
-}
-
-else if(type==="year"){
-
-start = new Date(d.getFullYear(),0,1);
-end = d;
-
-}
-
-else{
-
-start = d;
-end = d;
-
-}
-
-let present=0;
-let absent=0;
-
-history.forEach(h=>{
-
-let hd = new Date(h.date);
-
-if(hd>=start && hd<=end){
-
-if(h.status==="Present")
-present++;
-else
-absent++;
-
-}
-
-});
-
-res.json({
-
-present,
-absent,
-totalClasses:present+absent
-
-});
-
-});
 
 // ---------------- START SERVER ----------------
 
