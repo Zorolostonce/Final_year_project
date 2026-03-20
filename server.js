@@ -256,9 +256,20 @@ let d = new Date(a.date);
 
 // ---------- DAY ----------
 
+// ---------- DAY ----------
+
 if(type==="day"){
 
-if(a.date !== date) return;
+let d1 = new Date(a.date);
+let d2 = new Date(date);
+
+if(
+d1.getFullYear() !== d2.getFullYear() ||
+d1.getMonth() !== d2.getMonth() ||
+d1.getDate() !== d2.getDate()
+){
+return;
+}
 
 }
 
