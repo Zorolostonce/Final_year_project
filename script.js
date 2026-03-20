@@ -899,3 +899,41 @@ localStorage.removeItem("username");
 window.location = "login.html";
 
 }
+
+function loadStudentSummary(){
+
+if(role !== "teacher") return;
+
+fetch("/studentReport")
+.then(r=>r.json())
+.then(data=>{
+
+let div =
+document.getElementById("studentSummary");
+
+if(!div) return;
+
+div.innerHTML =
+"<h3>Student Report</h3>";
+
+for(let id in data){
+
+let percent = data[id];
+
+div.innerHTML +=
+
+"<div>"
++
+id +
+" → "
++
+percent +
+"%"
++
+"</div>";
+
+}
+
+});
+
+}
