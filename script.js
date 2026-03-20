@@ -908,28 +908,30 @@ if(role !== "teacher") return;
 let subject = getSubject();
 let date = getDate();
 
-let url1 =
+let urlReport =
 buildUrl("/report",subject,date);
 
-let url2 =
+let urlStudent =
 buildUrl("/studentReport",subject,date);
 
 
-// get total classes first
-fetch(url1)
+// get total classes
+fetch(urlReport)
 .then(r=>r.json())
 .then(rep=>{
 
 let totalClasses =
-rep.totalClasses;
+rep.totalClasses || 0;
 
 
-// get student data
+// get student list
 fetch("/students")
 .then(r=>r.json())
 .then(students=>{
 
-fetch(url2)
+
+// get student attendance
+fetch(urlStudent)
 .then(r=>r.json())
 .then(data=>{
 
@@ -948,7 +950,7 @@ data[s.id] || 0;
 
 let percent = 0;
 
-if(totalClasses>0){
+if(totalClasses > 0){
 percent =
 (present / totalClasses) * 100;
 }
@@ -957,25 +959,16 @@ div.innerHTML +=
 
 "<div>"
 +
-s.name
-+
-" → "
-+
-percent.toFixed(0)
-+
-"%"
-+
-"</div>";
+s.name +
+" → " +
+percent.toFixed(0) +
+"%</div>";
 
 });
 
 });
 
 });
-
-});
-
-}
 
 });
 
