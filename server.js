@@ -241,48 +241,82 @@ let subject = req.query.subject || "";
 let date = req.query.date;
 let type = req.query.type || "day";
 
-let start = new Date(date);
-let end = new Date(date);
-
-
-// ---------- RANGE ----------
-
-if(type==="week"){
-start.setDate(start.getDate()-7);
-}
-
-if(type==="month"){
-start.setMonth(start.getMonth()-1);
-}
-
-if(type==="year"){
-start.setFullYear(start.getFullYear()-1);
-}
-
-
-// ---------- FILTER ----------
+let selected = new Date(date);
 
 let present = 0;
 let absent = 0;
 
-let classSet = new Set(); // ✅ for unique class count
+let classSet = new Set();
+
 
 attendance.forEach(a=>{
 
 let d = new Date(a.date);
 
-if(d < start) return;
-if(d > end) return;
 
-if(subject && subject!==""){
-if(a.subject !== subject) return;
+// ---------- DAY ----------
+
+if(type==="day"){
+
+if(a.date !== date) return;
+
 }
 
-// count present/absent
+
+// ---------- WEEK ----------
+
+if(type==="week"){
+
+let w1 = new Date(selected);
+let w2 = new Date(selected);
+
+w1.setDate(selected.getDate() - selected.getDay()); // start week
+w2.setDate(w1.getDate() + 6); // end week
+
+if(d < w1 || d > w2) return;
+
+}
+
+
+// ---------- MONTH ----------
+
+if(type==="month"){
+
+if(
+d.getMonth() !== selected.getMonth()
+||
+d.getFullYear() !== selected.getFullYear()
+) return;
+
+}
+
+
+// ---------- YEAR ----------
+
+if(type==="year"){
+
+if(
+d.getFullYear()
+!== selected.getFullYear()
+) return;
+
+}
+
+
+// ---------- SUBJECT ----------
+
+if(subject && subject!==""){
+
+if(a.subject !== subject) return;
+
+}
+
+
+// ---------- COUNT ----------
+
 if(a.status==="Present") present++;
 else absent++;
 
-// count unique class
 classSet.add(
 a.date + "_" +
 a.subject + "_" +
@@ -291,16 +325,16 @@ a.classId
 
 });
 
+
 res.json({
 
-totalClasses: classSet.size, // ✅ correct
+totalClasses: classSet.size,
 present: present,
 absent: absent
 
 });
 
 });
-
 // ---------------- STUDENT REPORT ----------------
 
 app.get("/studentReport", (req, res) => {
