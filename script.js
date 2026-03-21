@@ -1,6 +1,15 @@
 let reportLoading = false;
 window.onload = function () {
+let btn =
+document.getElementById("exportBtn");
 
+if(btn){
+
+if(role !== "teacher"){
+btn.style.display = "none";
+}
+
+}
 let today =
 new Date().toISOString().slice(0,10);
 
