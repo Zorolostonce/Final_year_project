@@ -916,7 +916,6 @@ let type =
 typeEl ? typeEl.value : "day";
 
 
-// get report total classes
 let urlReport =
 "/reportRange"
 +
@@ -932,7 +931,6 @@ let totalClasses =
 rep.totalClasses || 0;
 
 
-// get history (filtered manually)
 fetch("/history")
 .then(r=>r.json())
 .then(hist=>{
@@ -947,7 +945,9 @@ document.getElementById("studentSummary");
 
 if(!div) return;
 
-div.innerHTML = `
+
+// ✅ build html string
+let html = `
 <h3>Student Report</h3>
 
 <table class="studentTable">
@@ -956,7 +956,6 @@ div.innerHTML = `
 <th>Name</th>
 <th>Percent</th>
 </tr>
-
 `;
 
 
@@ -978,9 +977,7 @@ let d2 = new Date(date);
 
 // DAY
 if(type==="day"){
-
 if(h.date !== date) return;
-
 }
 
 
@@ -1020,7 +1017,8 @@ d1.getFullYear()
 
 }
 
-// count class
+
+// class key
 let key =
 h.date + "_" +
 h.subject + "_" +
@@ -1034,7 +1032,7 @@ present++;
 });
 
 
-// ✅ FIX HERE — use totalClasses from reportRange
+// percent using reportRange totalClasses
 let percent = 0;
 
 if(totalClasses > 0){
@@ -1042,12 +1040,14 @@ percent =
 (present / totalClasses) * 100;
 }
 
+
 let color = "green";
 
 if(percent < 50) color = "red";
 else if(percent < 75) color = "orange";
 
-div.innerHTML += `
+
+html += `
 
 <tr>
 
@@ -1073,9 +1073,12 @@ ${percent.toFixed(0)}%
 `;
 
 });
+
+
 html += "</table>";
 
 div.innerHTML = html;
+
 });
 
 });
