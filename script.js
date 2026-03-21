@@ -1,5 +1,16 @@
 let reportLoading = false;
 window.onload = function () {
+let markTab =
+document.getElementById("markTab");
+
+if(markTab){
+
+if(role !== "teacher"){
+markTab.style.display = "none";
+}
+
+}
+
 let btn =
 document.getElementById("exportBtn");
 
