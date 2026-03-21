@@ -4,6 +4,12 @@
 
   { "username": "Monish", "password": "123", "role": "student" },
   { "username": "Rahul", "password": "123", "role": "student" },
-  { "username": "Kiran", "password": "123", "role": "student" }
+  { "username": "Kiran", "password": "123", "role": "student" },
+  { "username": "Danish", "password": "123", "role": "student" },
+  { "username": "Koli", "password": "123", "role": "student" },
+  { "username": "Kolli", "password": "123", "role": "student" },
+  { "username": "Goli", "password": "123", "role": "student" },
+  { "username": "Foli", "password": "123", "role": "student" },
+  { "username": "Niki", "password": "123", "role": "student" }
 
 ]
