@@ -966,54 +966,49 @@ let d1 = new Date(h.date);
 let d2 = new Date(date);
 
 
-// ---------- DAY ----------
+// DAY
 if(type==="day"){
 
-if(
-d1.getFullYear() !== d2.getFullYear() ||
-d1.getMonth() !== d2.getMonth() ||
-d1.getDate() !== d2.getDate()
-){
-return;
-}
+if(h.date !== date) return;
 
 }
 
 
-// ---------- WEEK ----------
+// WEEK
 if(type==="week"){
 
-let w1 = new Date(d2);
-let w2 = new Date(d2);
+let start = new Date(d2);
+let end = new Date(d2);
 
-w1.setDate(d2.getDate() - d2.getDay());
-w2.setDate(w1.getDate() + 6);
+start.setDate(d2.getDate() - d2.getDay());
+end.setDate(start.getDate() + 6);
 
-if(d1 < w1 || d1 > w2) return;
+if(d1 < start || d1 > end) return;
 
 }
 
 
-// ---------- MONTH ----------
+// MONTH
 if(type==="month"){
 
 if(
-d1.getMonth() !== d2.getMonth() ||
+d1.getMonth() !== d2.getMonth()
+||
 d1.getFullYear() !== d2.getFullYear()
 ) return;
 
 }
 
 
-// ---------- YEAR ----------
+// YEAR
 if(type==="year"){
 
 if(
-d1.getFullYear() !== d2.getFullYear()
+d1.getFullYear()
+!== d2.getFullYear()
 ) return;
 
 }
-
 
 // count class
 let key =
