@@ -342,32 +342,39 @@ color: yellow;
 margin: auto;
 margin-top: 10px;
 border-collapse: collapse;
-width: 300px;
+width: 400px;
 
 }
 
-.studentTable th,
+.studentTable th{
+
+background:#2f3b4a;
+padding:8px;
+border-radius:10px;
+
+}
+
 .studentTable td{
 
-padding: 6px;
-text-align: center;
+padding:6px;
+text-align:left;
 
 }
 
 .bar{
 
-width: 120px;
-height: 8px;
-background: #444;
-border-radius: 6px;
-display: inline-block;
-margin-right: 6px;
+width:120px;
+height:8px;
+background:#444;
+border-radius:6px;
+display:inline-block;
+margin-right:6px;
 
 }
 
 .fill{
 
-height: 8px;
-border-radius: 6px;
+height:8px;
+border-radius:6px;
 
 }
