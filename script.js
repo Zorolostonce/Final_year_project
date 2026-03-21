@@ -848,6 +848,7 @@ loadStudents();
 setTimeout(()=>{
 loadReport();
 loadStudentReport();
+loadStudentSummary()
 loadHistory();
 loadChart();
 toggleButtons();
