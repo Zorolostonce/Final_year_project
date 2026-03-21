@@ -947,8 +947,17 @@ document.getElementById("studentSummary");
 
 if(!div) return;
 
-div.innerHTML =
-"<h3>Student Report</h3>";
+div.innerHTML = `
+<h3>Student Report</h3>
+
+<table class="studentTable">
+
+<tr>
+<th>Name</th>
+<th>Percent</th>
+</tr>
+
+`;
 
 
 students.forEach(s=>{
@@ -1033,13 +1042,35 @@ percent =
 (present / totalClasses) * 100;
 }
 
-div.innerHTML +=
-"<div>"
-+
-s.name +
-" → " +
-percent.toFixed(0) +
-"%</div>";
+let color = "green";
+
+if(percent < 50) color = "red";
+else if(percent < 75) color = "orange";
+
+div.innerHTML += `
+
+<tr>
+
+<td>${s.name}</td>
+
+<td>
+
+<div class="bar">
+<div class="fill"
+style="
+width:${percent}%;
+background:${color};
+">
+</div>
+</div>
+
+${percent.toFixed(0)}%
+
+</td>
+
+</tr>
+
+`;
 
 });
 
