@@ -1028,14 +1028,13 @@ present++;
 
 });
 
-let totalForStudent =
-classSet.size;
 
+// ✅ FIX HERE — use totalClasses from reportRange
 let percent = 0;
 
-if(totalForStudent > 0){
+if(totalClasses > 0){
 percent =
-(present / totalForStudent) * 100;
+(present / totalClasses) * 100;
 }
 
 div.innerHTML +=
