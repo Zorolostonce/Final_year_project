@@ -1073,7 +1073,9 @@ ${percent.toFixed(0)}%
 `;
 
 });
-div.innerHTML += "</table>";
+html += "</table>";
+
+div.innerHTML = html;
 });
 
 });
