@@ -1216,3 +1216,28 @@ downloadCSV(rows);
 });
 
 }
+//-------------Dowload CSV-----------
+function downloadCSV(rows){
+
+let csv =
+rows.map(r =>
+r.join(",")
+).join("\n");
+
+let blob =
+new Blob([csv],{
+type:"text/csv"
+});
+
+let a =
+document.createElement("a");
+
+a.href =
+URL.createObjectURL(blob);
+
+a.download =
+"attendance_report.csv";
+
+a.click();
+
+}
