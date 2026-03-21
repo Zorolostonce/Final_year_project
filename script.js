@@ -959,11 +959,60 @@ if(h.name !== s.name) return;
 if(subject && subject!="" && h.subject!==subject)
 return;
 
-if(type==="day" && date && h.date!==date)
+let d1 = new Date(h.date);
+let d2 = new Date(date);
+
+
+// ---------- DAY ----------
+if(type==="day"){
+
+if(
+d1.getFullYear() !== d2.getFullYear() ||
+d1.getMonth() !== d2.getMonth() ||
+d1.getDate() !== d2.getDate()
+){
 return;
+}
+
+}
 
 
-// count unique class for this student
+// ---------- WEEK ----------
+if(type==="week"){
+
+let w1 = new Date(d2);
+let w2 = new Date(d2);
+
+w1.setDate(d2.getDate() - d2.getDay());
+w2.setDate(w1.getDate() + 6);
+
+if(d1 < w1 || d1 > w2) return;
+
+}
+
+
+// ---------- MONTH ----------
+if(type==="month"){
+
+if(
+d1.getMonth() !== d2.getMonth() ||
+d1.getFullYear() !== d2.getFullYear()
+) return;
+
+}
+
+
+// ---------- YEAR ----------
+if(type==="year"){
+
+if(
+d1.getFullYear() !== d2.getFullYear()
+) return;
+
+}
+
+
+// count class
 let key =
 h.date + "_" +
 h.subject + "_" +
