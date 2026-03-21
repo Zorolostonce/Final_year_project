@@ -1073,7 +1073,7 @@ ${percent.toFixed(0)}%
 `;
 
 });
-
+div.innerHTML += "</table>";
 });
 
 });
