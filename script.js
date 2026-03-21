@@ -1091,32 +1091,11 @@ function exportExcel(){
 
 let rows = [];
 
-let subject = getSubject();
-let date = getDate();
-
-let typeEl =
-document.getElementById("reportType");
-
-let type =
-typeEl ? typeEl.value : "day";
-
-
-rows.push([
-"Report Type", type
-]);
-
-rows.push([
-"Subject", subject
-]);
-
-rows.push([
-"Date", date
-]);
-
-rows.push([]);
-
 rows.push([
 "Name",
+"Total Classes",
+"Present",
+"Absent",
 "Percent"
 ]);
 
@@ -1131,78 +1110,41 @@ fetch("/students")
 students.forEach(s=>{
 
 let present = 0;
-let total = 0;
+let absent = 0;
+let classSet = new Set();
 
 hist.forEach(h=>{
 
 if(h.name !== s.name) return;
 
-if(subject && subject!="" && h.subject!==subject)
-return;
+let key =
+h.date + "_" +
+h.subject + "_" +
+h.classId;
 
-let d1 = new Date(h.date);
-let d2 = new Date(date);
-
-
-// day
-if(type==="day"){
-if(h.date !== date) return;
-}
-
-
-// week
-if(type==="week"){
-
-let start = new Date(d2);
-let end = new Date(d2);
-
-start.setDate(d2.getDate()-d2.getDay());
-end.setDate(start.getDate()+6);
-
-if(d1<start || d1>end) return;
-
-}
-
-
-// month
-if(type==="month"){
-
-if(
-d1.getMonth()!==d2.getMonth()
-||
-d1.getFullYear()!==d2.getFullYear()
-) return;
-
-}
-
-
-// year
-if(type==="year"){
-
-if(
-d1.getFullYear()
-!== d2.getFullYear()
-) return;
-
-}
-
-
-total++;
+classSet.add(key);
 
 if(h.status==="Present")
 present++;
+else
+absent++;
 
 });
 
+let total =
+classSet.size;
 
 let percent = 0;
 
 if(total>0)
-percent = (present/total)*100;
-
+percent =
+(present/total)*100;
 
 rows.push([
 s.name,
+total,
+present,
+absent,
 percent.toFixed(0) + "%"
 ]);
 
