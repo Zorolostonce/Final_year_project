@@ -917,8 +917,11 @@ typeEl ? typeEl.value : "day";
 
 // get report total classes
 let urlReport =
-buildUrl("/report",subject,date);
-
+"/reportRange"
++
+"?subject=" + subject +
+"&date=" + date +
+"&type=" + type;
 
 fetch(urlReport)
 .then(r=>r.json())
