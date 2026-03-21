@@ -131,11 +131,30 @@ app.post("/attendance", (req, res) => {
                 .slice(0, 10);
     }
 
+    // ✅ get last classId only for same date + subject
     let classId = 1;
 
     if (attendance.length > 0) {
-        classId =
-            attendance[attendance.length - 1].classId;
+
+        let last = attendance
+            .slice()
+            .reverse()
+            .find(
+                a =>
+                    a.date === date &&
+                    a.subject === subject
+            );
+
+        if (last) {
+            classId = last.classId;
+        } else {
+
+            // new day / subject → new class
+            classId =
+                attendance[
+                    attendance.length - 1
+                ].classId + 1;
+        }
     }
 
     let currentClass = attendance.filter(
@@ -145,6 +164,7 @@ app.post("/attendance", (req, res) => {
             a.date === date
     );
 
+    // if class full → next class
     if (currentClass.length === studentCount) {
 
         classId++;
@@ -156,7 +176,8 @@ app.post("/attendance", (req, res) => {
         a =>
             a.student_id === student_id &&
             a.subject === subject &&
-            a.date === date
+            a.date === date &&
+            a.classId === classId
     );
 
     if (already) {
@@ -181,7 +202,6 @@ app.post("/attendance", (req, res) => {
     res.send("Saved");
 
 });
-
 
 // ---------------- REPORT ----------------
 
